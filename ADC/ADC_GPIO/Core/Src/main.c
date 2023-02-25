@@ -42,6 +42,7 @@
 ADC_HandleTypeDef hadc1;
 
 /* USER CODE BEGIN PV */
+/* Variable to store adc result. */
 uint16_t adc_res = 0;
 /* USER CODE END PV */
 
@@ -88,6 +89,7 @@ int main(void)
   MX_GPIO_Init();
   MX_ADC1_Init();
   /* USER CODE BEGIN 2 */
+  /* Set LED aoutput and reset Buzzer output. */
   HAL_GPIO_WritePin(LED_GPIO_Port, LED_Pin, GPIO_PIN_SET);
   HAL_GPIO_WritePin(BUZZER_GPIO_Port, BUZZER_Pin, GPIO_PIN_RESET);
   /* USER CODE END 2 */
@@ -96,15 +98,20 @@ int main(void)
   /* USER CODE BEGIN WHILE */
   while (1)
   {
+	  /* Start ADC conversion. */
 	  HAL_ADC_Start(&hadc1);
 
+	  /* Poll ADC1 perihperal, set timeout to 10mSec. */
 	  HAL_ADC_PollForConversion(&hadc1, 10);
 
+	  /* Save the ADC conversion resut to adc_res variable. */
 	  adc_res = HAL_ADC_GetValue(&hadc1);
 
+	  /* Toggle LED and Buzzer outputs. */
 	  HAL_GPIO_TogglePin(LED_GPIO_Port, LED_Pin);
 	  HAL_GPIO_TogglePin(BUZZER_GPIO_Port, BUZZER_Pin);
 
+	  /* Delay for led and buzzer blink. */
 	  HAL_Delay(adc_res / 3);
     /* USER CODE END WHILE */
 
